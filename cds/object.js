@@ -122,6 +122,17 @@ function getElementOfArrayProperty(obj, key, index) {
 }
 
 /*15*/
+function select(arr, obj) {
+  let newObj = {}; // 빈 객체를 선언
+  for (let prop in obj) {
+    for (let i = 0; i < arr.length; i++) {
+      if (prop === arr[i]) {
+        newObj[prop] = obj[prop]; // 다음과 같이 추가 가능
+      }
+    }
+  }
+  return newObj;
+}
 
 /*16*/
 function getLastElementOfProperty(obj, property) {
@@ -151,21 +162,91 @@ function getValueOfNthElement(arr, num) {
 
 /*18*/
 function getAllButLastElementOfProperty(obj, key) {
-  let prop = obj[key]; //객체에 키 입력
-  if (!Array.isArray(prop) || prop.length === 0) {
+  if (!Array.isArray(obj[key]) || obj[key] === 0) {
     // 민약 배열이 아니거나 빈 배열인 경우
     return []; //빈 배열 리턴
   }
-  return prop.slice(0, -1); //그 외는 마지막 요소가 제거된 배열 리턴
+  return obj[key].slice(0, -1); //그 외는 마지막 요소가 제거된 배열 리턴
 }
 
 /*19*/
 function extend(obj1, obj2) {
   for (let key in obj2) {
-    // obj2를 입력
+    // obj2 순회
     if (!(key in obj1)) {
-      // 만약 obj1이 아니면
+      // 만약 obj1이 없으면
       obj1[key] = obj2[key];
     }
   }
+}
+
+/*20*/
+function countAllCharacters(str) {
+  // 입력 : 문자열
+  // 출력 : { 문자열의 각 문자 : 나온 횟수 }
+  // 객체를 하나 만들어 준다.
+  let obj = {};
+  // str의 length만큼 반복한다.
+  // 해당 문자와 같은 키가 아직 없다면,
+  // 키를 만들어 주고, 값을 0으로 넣어준다.
+  // 값을 1증가 시킨다.
+  // (반복)
+  // 최종적으로 만들어진 객체를 리턴한다.
+
+  for (let i = 0; i < str.length; i++) {
+    if (!obj[str[i]]) {
+      obj[str[i]] = 0;
+      // 'banana'
+      // (1) 'b'는 아직 없음 -> obj => {b: 0}
+      // (2) 'a'도 없음 -> obj = {b: 1, a: 0}
+      // (3) 'n'도 없음 -> obj = {b: 1, a: 1, n: 0}
+    }
+    obj[str[i]]++;
+    // 위 조건과 상관없이 str[i]를 키로한 값을 1 증가시킨다.
+    // (1) {b: 0} -> {b: 1}
+    // (2) {b: 1, a: 0} -> {b: 1, a: 1}
+    // (3) {b: 1, a: 1, n: 0} -> {b: 1, a: 1, n: 1}
+    // (반복)
+    // (6) {b: 1, a: 2, n: 2} -> {b: 1, a: 3, n: 2}
+  }
+  return obj;
+}
+/*21*/
+function mostFrequentCharacter(str) {
+  // 20번과 유사한 문제
+  // 20번 문제는 객체로 만들어서 리턴해주기만 하면 되는데, 이번에는 가장 많이 반복된 문자를 리턴
+  // 20번 + '가장 많이 반복' 찾기
+  // 가장 큰, 가장 많은 -> 비교 대상 만들어 놓고 하나씩 비교해서 교체하기
+
+  // str이 만약 apple이라면
+  // obj = {a: 1, p: 2, l: 1, e: 1} 이렇게 만들어 준다.
+  // 가장 많이 나온 문자를 체크할 수 있는 변수를 하나 만들어 놓고,
+  // 가장 큰 수를 체크할 수 있는 변수도 하나 만들어 놓고,
+  // 그것보다 더 커지면? 교체 -> 가장 큰 수, 가장 많이 나온 문자 둘 다 교체
+  let mostChar = "";
+  let mostCount = 0;
+  let obj = {};
+  // 주의 사항 : 띄어쓰기 제외 -> 제외한다는 건 어떻게? continue를 사용하면 된다.
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === " ") {
+      continue;
+    }
+    if (obj[str[i]] === undefined) {
+      obj[str[i]] = 0;
+    }
+    obj[str[i]]++;
+
+    if (obj[str[i]] > mostCount) {
+      // 반복문을 돌다가 어느 순간 문자열에 해당하는 값이 mostCount보다 커지면? mostCount와 mostChar교체
+      // {a: 1} -> 교체 -> mostCount:1, mostChar: 'a'
+      // {a: 1, p: 2} -> 교체 -> mostCount:2, mostChar: 'p'
+      // (반복...)
+      // {a: 1, p: 2, l: 1, e: 1}
+      mostCount = obj[str[i]];
+      mostChar = str[i];
+    }
+  }
+  // 마지막엔 가장 많이 나온 문자 리턴
+  // 'p'
+  return mostChar;
 }
