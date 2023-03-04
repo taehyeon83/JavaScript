@@ -24,3 +24,18 @@
 3. 모듈패턴
 모듈패턴을 이용하면 특정 데이터를 다른 코드 실행으로부터 보호할 수 있다.
 
+클로저 예제
+function sayHello (){
+    const a = 'Hellow';
+    const b = 'World';
+
+    function sumString (){
+        console.log(a+' '+b);
+    }
+    return sumString
+}
+
+const myFunc = sayHello();
+
+myFun(); // 'Hello World'
+
