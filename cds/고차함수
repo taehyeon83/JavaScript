@@ -1,0 +1,588 @@
+/*1*/
+function returnFunction() {
+  // 'Hello HoF!'
+  return function () {
+    // 'Hello HoF!' 리턴하는 함수를 리턴
+    return "Hello HoF!";
+  };
+}
+
+/*2*/
+function functionParameter(func, num) {
+  // 함수와 수를 입력받아
+  return func(num); //num에 함수를 적용한 결과 리턴
+}
+
+/*3*/
+function applyTwice(func, num) {
+  //함수와 수(num)를 입력받아
+  return func(func(num)); //num에 함수를 두 번(twice) 적용(apply)한 결과를 리턴
+}
+
+/*4*/
+function compose(func1, func2, num) {
+  //두 개의 함수와 수(num)를 입력받아
+  return func1(func2(num)); //num에 함수들을 num에 가까운 순서대로 적용한 결과를 리턴
+}
+
+/*5*/
+function compose2(func1, func2) {
+  //두 개의 함수를 입력받아
+  return function (num) {
+    // 함수를 리턴해야 합니다.
+    return func1(func2(num)); //두 함수가 결합된 새로운 함수를 리턴
+  };
+}
+
+/*6*/
+function pipe(...funcN) {
+  //  rest 파라미터 (a,b, ...rest)
+  //  함수 선언 시 : function pipe(...rest)
+  return function (num) {
+    // 함수 리턴
+    let result = num;
+    for (let i = 0; i < funcN.length; i++) {
+      result = funcN[i](result);
+    }
+    return result;
+  };
+}
+
+// 함수들을 입력받아 함수들이 입력된 차례대로 결합된 새로운 함수를 리턴해야 합니다.
+
+// 인자 1: func1 , number 타입을 리턴
+// 인자 2 : func2 , number 타입을 리턴
+// 인자 N : funcN , 임의의 타입을 리턴
+
+// 출력: 함수를 리턴
+
+// 주의 : 입력되는 함수들의 수는 1개 이상, 함수가 아닌 입력은 존재x
+
+/*7*/
+function callbackOnly(callback, response) {
+  if (response.status === "success") {
+    return callback(response.data);
+  } else {
+    return "Something went wrong!";
+  }
+}
+
+// 함수와 객체를 입력받아 조건별로 아래와 같은 동작을 수행
+// (조건문 작성)
+// 1. 객체의 'status' 속성값이 'fail'인 경우 = 'Something went wrong!'을 리턴
+// 2. 객체의 'status' 속성값이 'success'인 경우 = 'data' 속성값에 입력받은 함수를 적용한 결과를 리턴
+// 인자 1 : callback : string 타입을 입력받아 임의의 타입을 리턴하는 함수
+// 인자 2 : response : 'status', 'data' 속성을 갖는 객체
+
+// 출력 : string 또는 입력받은 함수(callback)의 리턴 타입
+
+/*8*/
+function mapCallback(func, arr) {
+  // 함수와 배열을 입력받아
+  let result = []; // 배열
+  for (let el of arr) {
+    // 반복문 사용, 배열 for ~of문
+    result.push(func(el)); // 배열의 각 요소에 함수가 적용된 새로운 배열
+  }
+  return result; //리턴
+}
+
+// 인자 1 : func
+// 인자 2 : arr
+
+// 출력 : 배열
+
+// 주의 : 반복문(for)문을 사용, arr.map 사용은 금지
+
+/*9*/
+function filterCallback(func, arr) {
+  //함수와 배열을 입력받아
+  let result = [];
+  for (let el of arr) {
+    //배열의 각 요소에 함수를 적용했을 때
+    if (func(el)) {
+      //그 결과가 참인 요소만을 갖는
+      result.push(el); //새로운 배열을
+    }
+  }
+  return result; // 리턴
+}
+
+// 인자 1 : func , boolean 타입을 리턴하는 함수
+// 인자 2 : arr , number 타입을 요소로 갖는 배열
+
+// 주의 : 반복문(for)문을 사용, arr.filter 사용은 금지
+
+// ----------------------------------
+
+/*10*/
+function removeElement(arr, discarder) {
+  // 배열과 임의의 값(discarder)을 입력받아
+  return arr.filter(function (el) {
+    // 새로운 배열을 리턴
+    if (el !== discarder) {
+      // 일치하지 않으면
+      return true; // 추가
+    } else {
+      // 아니면
+      return false; // 제거
+    }
+  });
+}
+
+/*11*/
+function keep(arr, keeper) {
+  // 배열과 임의의 값(keeper)을 입력받아
+  return arr.filter(function (el) {
+    // 새로운 배열을 리턴
+    if (el === keeper) {
+      // 기존 배열에서 keeper와 일치하면
+      return true; // 새로운 배열 리턴
+    } else {
+      // 그렇지 않으면
+      return false; // 제거
+    }
+  });
+}
+
+/*12*/
+function filterOddLengthWords(words) {
+  //문자열을 요소로 갖는 배열을 입력받아
+  return words.filter(function (el) {
+    return el.length % 2 !== 0; // 그 길이가 홀수인 요소만 리턴
+  });
+}
+
+/*13*/
+function getIndex(arr, num) {
+  return arr.filter((el) => el < num).length;
+}
+
+// function getIndex(arr, num) {
+//   return arr.filter(function (el) {
+//     return el < num;
+//   }).length;
+// }
+
+//정수를 요소로 갖는 배열과 정수(num)를 입력받아
+// num을 배열에 추가하고 정렬한다고 가정할 경우, num의 인덱스를 리턴
+// 인자 1 : arr : number 타입을 요소로 갖는 배열
+// 인자 2 : num : number 타입의 정수
+
+// 출력 : number 타입을 리턴
+
+// 주의 사항 : 반복문(for, while) 사용 금지, num은 arr의 어떤 요소와도 같지 않다고 가정
+
+/*14*/
+function lessThan100(number) {
+  return typeof number === "number" && number < 100;
+}
+
+function getElementsLessThan100AtProperty(obj, property) {
+  if (Array.isArray(obj[property])) return obj[property].filter(lessThan100);
+  else return [];
+}
+
+// 객체와 키를 입력바아 키에 해당하는 값이 배열인 경우(Array.isArray(arr)), 100보다 작은 요소들만 갖는 배열을 리턴
+
+// 인자 1 : obj : 임의의 속성을 갖는 객체
+// 인자 2 : property : string 타입의 키
+
+// 주의 : 반복문 금지
+// 주어진 보조 함수(lessThan100) 사용
+
+// 객체의 속성값이 동적으로 변할 경우 브라켓 노테이션 사용
+
+/*15*/
+function getDoubledElements(arr) {
+  // 수를 요소로 갖는 배열을 입력받아
+  return arr.map(function (el) {
+    return el * 2; // 2배 곱한 새로운 배열을 리턴
+  });
+}
+
+// 수를 요소로 갖는 배열(arr)을 입력받아 각 요소를 2배 곱한 새로운 배열을 리턴
+
+// 인자 1 : arr : number 타입을 요소로 갖는 배열
+
+// 출력 : 새로운 배열을 리턴
+
+// 주의 : 반복문 사용은 금지, 반드시 arr.map를 이용
+// arr.map =배열 내의 모든 요소 각각에 대하여 주어진 함수를 호출한 결과를 모아 새로운 배열을 반환
+
+/*16*/
+function getLengthOfElements(arr) {
+  return arr.map(function (el) {
+    return el.length; // 각 요소의 길이를 요소
+  });
+}
+
+// 문자열을 요소로 갖는 배열(arr)을 입력받아 각 요소의 길이를 요소로 갖는 새로운 배열을 리턴
+
+// 인자 1 : arr : string 타입을 요소로 갖는 배열
+
+// 출력  : 새로운 배열을 리턴
+
+// 주의 : 반복문(for, while) 사용은 금지, 반드시 arr.map를 이용
+// arr.map =배열 내의 모든 요소 각각에 대하여 주어진 함수를 호출한 결과를 모아 새로운 배열을 반환
+
+/*17*/
+function checkEvenOrNot(arr) {
+  return arr.map(function (el) {
+    //새로운 배열을 리턴
+    if (el === 0 || el % 2 === 1) {
+      // 만약 0이거나 2로 나눈 나머지가 1일경우
+      return "no";
+    } else {
+      return "ok";
+    }
+  });
+}
+
+// 수를 요소로 갖는 배열(arr)을 입력받아 각 요소가 2의 배수인지에 대한 정보를 요소로 갖는 새로운 배열을 리턴
+
+// 인자 1 : arr : number 타입을 요소로 갖는 배열, arr[i]는 0 이상의 정수
+
+// 출력 : 새로운 배열을 리턴
+// arr[i]이 2의 배수일 경우, 새로운 배열의 i번째 요소는 'ok'
+// arr[i]이 2의 배수가 아닐 경우, 새로운 배열의 i번째 요소는 'no'
+// 주의 : 반복문(for, while) 사용은 금지, 반드시 arr.map를 이용
+//        0은 2의 배수가 아니라고 가정
+
+/*18*/
+function getOnlyNames(arr) {
+  // 개인 정보를 담고 있는 객체를 요소로 갖는 배열을 입력받아
+  return arr.map(function (i) {
+    // 새로운 배열 리턴
+    return i.name; // string 타입을 요소로 갖는 배열을 리턴
+  });
+}
+
+// 개인 정보를 담고 있는 객체를 요소로 갖는 배열을 입력받아 각 객체의 'name'속성을 요소로 가진 배열을 리턴
+
+// 인자 1 : arr : 객체를 요소로 갖는 배열,
+// arr[i]는 'name', 'age' 속성을 갖는 객체, 'name' 속성은 string 타입
+
+// 출력 : string 타입을 요소로 갖는 배열을 리턴
+
+// 주의 : 반복문(for, while) 사용은 금지
+
+/*19*/
+function getFullNames(arr) {
+  // 개인 정보를 담고 있는 객체를 요소로 갖는 배열을 입력받아
+  return arr.map(function (i) {
+    // 새로운 배열 리턴
+    return `${i.firstName}${" "}${i.lastName}`; // 이름 전체를 요소로 갖는 배열을 리턴
+    // 'firstName', 'lastName' 속성값 사이에 띄어쓰기 하나를 둔 문자열
+  });
+}
+
+// 개인 정보를 담고 있는 객체를 요소로 갖는 배열을 입력받아 이름 전체를 요소로 갖는 배열을 리턴
+
+// 인자 1 : arr : 객체를 요소로 갖는 배열,
+// arr[i]는 'firstName', 'lastName' 속성을 갖는 객체
+// 'firstName', 'lastName' 속성은 string 타입
+
+// 출력 : string 타입을 요소로 갖는 배열을 리턴
+
+// 주의 : 복문(for, while) 사용은 금지
+// 이름 전체는 'firstName', 'lastName' 속성값 사이에 띄어쓰기 하나를 둔 문자열( +' '+ )
+
+/*20*/
+function square(number) {
+  // 배열의 각 요소를 제곱한 함수
+  return number * number;
+}
+
+function getSquaredElementsAtProperty(obj, property) {
+  // 객체(obj)와 키(property)를 입력받아
+  let arr = obj[property];
+  if (Array.isArray(arr) === true) {
+    //키에 해당하는 값이 배열인 경우
+    return arr.map(square); // 배열의 각 요소를 제곱한 새로운 배열을 리턴
+  } else {
+    // 아니면
+    return []; // 빈 배열 리턴
+  }
+}
+
+// 객체와 키를 입력받아 키에 해당하는 값이 배열인 경우(Array.isArray), 배열의 각 요소를 제곱한 새로운 배열을 리턴
+// 인자 1 : obj : 임의의 속성을 갖는 객체
+// 인자 2 : property : string 타입의 키
+// 출력 : 새로운 배열을 리턴
+
+// 주의 : 반복문(for, while) 사용은 금지, .
+// 주어진 키에 해당하는 값이 배열인 경우, 해당 배열은 number 타입의 정수만을 요소로 가진다 가정,
+// 주어진 보조 함수(square)를 사용
+
+/*21*/
+function getOnlyAllowedToDrink(arr) {
+  // 개인 정보를 담고 있는 객체를 요소로 갖는 배열(arr)을 입력받아
+  let AdultList = arr.filter(function (person) {
+    // 변수 선언
+    return person.age >= 18; // 18세 이상인 사람만 리턴
+  });
+
+  return AdultList.map(function (person) {
+    return person.name; // 사람의 이름을 요소로 가진 배열 리턴
+  });
+}
+
+// function getOnlyAllowedToDrink(arr) {
+//   return arr.filter(el => el.age >= 18).map(el => el.name);
+// }
+
+// 18세 이상인 사람의 이름을 요소로 갖는 배열을 리턴 (조건문사용)
+
+// 인자 1 : arr : 객체를 요소로 갖는 배열
+// arr[i]는 'name', 'age' 속성을 갖는 객체
+// 'age' 속성은 number 타입
+
+// 출력 : string 타입을 요소로 갖는 배열을 리턴
+
+// 주의 : 반복문(for, while) 사용은 금지
+
+/*22*/
+function classicMovies(arr, year) {
+  //영화 정보가 담긴 객체를 요소로 갖는 배열(arr)과 연도(year)를 입력받아
+  let beforeYear = arr.filter(function (movie) {
+    // 변수 선언, filter
+    return movie.year < year; // 해당 연도 이전의 영화
+  });
+
+  return beforeYear.map(function (movie) {
+    //map
+    return `${movie.title} by ${movie.director}`; //영화 제목 by 영화 감독의 형태로 리턴
+  });
+}
+
+// 영화 정보가 담긴 객체를 요소로 갖는 배열(arr)과 연도(year)를 입력받아
+// 해당 연도 이전의 영화를 요소로 갖는 배열을 리턴
+
+// 인자 1 : arr : 객체를 요소로 갖는 배열
+// arr[i]는 'title', 'year' 등의 속성을 갖는 객체
+// 'year' 속성은 number 타입
+
+// 인자 2 : year : number 타입의 연도
+
+// 출력 : string 타입을 요소로 갖는 배열을 리턴
+// 각 요소는 영화 제목 by 영화 감독의 형태
+
+// 주의 : 반복문(for, while) 사용은 금지
+
+/*23*/
+function computeSumOfAllElements(arr) {
+  if (arr.length === 0) return 0;
+  return arr.reduce(function (arr, val) {
+    return arr + val;
+  });
+}
+
+// number 타입을 요소로 갖는 배열을 입력받아 배열의 모든 요소의 합을 리턴
+
+// 인자 1 : arr : number 타입을 요소로 갖는 배열
+
+// 출력 : number 타입을 리턴
+
+// 주의 : 반드시 arr.reduce를 이용
+
+/*24*/
+function computeProductOfAllElements(arr) {
+  return arr.reduce(function (arr, val) {
+    return arr * val;
+  }, 1);
+}
+
+// number 타입을 요소로 갖는 배열을 입력받아 배열의 모든 요소의 곱을 리턴
+
+// 인자 1 : arr : number 타입을 요소로 갖는 배열
+
+// 출력 : number 타입을 리턴
+
+// 주의 : 반복문(for, while) 사용은 금지, 빈 배열을 입력받은 경우, 1을 리턴
+// 반드시 arr.reduce를 이용
+
+/*25*/
+function computeAverageOfNumbers(arr) {
+  if (arr.length === 0) {
+    return 0;
+  }
+  let total = arr.reduce(function (acc, cur) {
+    return acc + cur;
+  });
+  return total / arr.length;
+}
+
+// number 타입을 요소로 갖는 배열을 입력받아 배열의 모든 요소의 평균을 리턴
+
+// 인자 1 : arr : number 타입을 요소로 갖는 배열
+// 출력 : number 타입을 리턴
+// 주의 : 반복문(for, while) 사용은 금지, 빈 배열을 입력받은 경우, 0을 리턴
+// 반드시 arr.reduce를 이용
+
+/*26*/
+function calculateScore(records, value) {
+  let sum = records.reduce(function (acc, cur) {
+    if (cur.animal === value) {
+      return acc + cur.score;
+    } else {
+      return acc;
+    }
+  }, 0);
+
+  return sum;
+}
+
+// function calculateScore(records, value) {
+// return records.filter(el => el.animal === value).reduce((acc,cur) => acc + cur.score, 0)
+// }
+
+// 객체를 요소로 갖는 배열과 문자열을 입력받아 각 요소의 'animal' 속성값이 문자열과 일치할 경우
+// 해당 요소의 'score' 속성값을 모두 더한 값을 리턴
+
+// 인자 1 : records : 객체를 요소로 갖는 배열
+// 인자 2 : value : string 타입의 문자열
+
+// 출력 : number 타입을 리턴
+
+// 주의 : 반복문(for, while) 사용은 금지, 빈 배열을 입력받은 경우, 0을 리턴
+
+/*27*/
+function getLongestElement(arr) {
+  return arr.reduce((acc, cur) => {
+    if (acc.length >= cur.length) {
+      return acc;
+    } else {
+      return cur;
+    }
+  }, "");
+}
+
+// 문자열을 요소로 갖는 배열을 입력받아 배열에서 가장 긴 문자열을 리턴
+
+// 인자 1 : arr : string 타입을 요소로 갖는 배열
+
+// 출력 : string 타입을 리턴
+
+// 주의 : 반복문(for, while) 사용은 금지,
+// 가장 긴 문자열이 중복이 될 경우, 앞 쪽에 있는 요소를 리턴
+// 빈 배열을 입력받은 경우, 빈 문자열을 리턴
+
+/*28*/
+function getLengthOfLongestElement(arr) {
+  if (arr.length === 0) {
+    return 0;
+  }
+
+  return arr.reduce(function (acc, cur) {
+    if (acc.length >= cur.length) {
+      return acc;
+    } else {
+      return cur;
+    }
+  }).length;
+}
+
+// 문자열을 요소로 갖는 배열을 입력받아 배열에서 가장 긴 문자열의 길이를 리턴
+
+// 인자 1 : arr : string 타입을 요소로 갖는 배열
+
+// 출력 : number 타입을 리턴
+
+// 주의 : 반복문(for, while) 사용은 금지, 빈 배열을 입력받은 경우, 0을 리턴
+
+/*29*/
+function joinArrayOfArrays(arr) {
+  const joinedArr = arr.reduce(function (acc, val) {
+    return acc.concat(val);
+  });
+  return joinedArr;
+}
+
+// 2차원 배열(배열을 요소로 갖는 배열)을 입력받아 배열들의 요소를 모두 담고 있는 단일 배열을 리턴
+
+// 인자 1 : arr : 임의의 요소를 갖는 배열
+
+// 출력 : 배열의 모든 요소들을 깊이 1 까지 단일 배열로 이어붙인 배열을 리턴
+
+// 주의 : 반복문(for, while) 사용은 금지, arr.flat 사용은 금지
+
+/*30*/
+function findShortestWord(arr) {
+  const onlyStrings = arr.filter(function (el) {
+    return typeof el === "string";
+  });
+
+  if (onlyStrings.length === 0) {
+    return "";
+  }
+
+  return onlyStrings.reduce(function (acc, cur) {
+    if (acc.length <= cur.length) {
+      return acc;
+    } else {
+      return cur;
+    }
+  });
+}
+
+// 배열을 입력받아 배열에서 가장 짧은 길이를 가진 문자열 요소를 리턴
+
+// 인자 1 : arr : 임의의 요소가 담긴 배열
+
+// 출력 : string 타입을 리턴
+
+// 주의 : 반복문(for, while) 사용은 금지,
+// 같은 길이의 요소가 있다면 배열의 앞쪽에 있는 요소를 리턴
+// 배열에는 문자열 외에 다른 요소들이 있을 수 있다.
+// 빈 배열을 입력받은 경우, 빈 문자열을 리턴
+// 주어진 배열에 문자열이 없는 경우, 빈 문자열을 리턴
+
+/*31*/
+function studentReports(students) {
+  return students
+    .filter((el) => el.gender === "female")
+    .map((el) => {
+      const sum = el.grades.reduce((acc, cur) => acc + cur);
+      const avg = sum / el.grades.length;
+      el.grades = avg;
+      return el;
+    });
+}
+
+// 학생의 정보가 담긴 객체를 요소로 갖는 배열을 입력받아 아래 조건에 맞게 변형된 배열을 리턴
+// 남학생들의 정보는 리턴하는 배열에서 제외
+// 'grades' 속성값은 평균값(number 타입)으로 바꿈
+
+// 인자 1 : students : 객체를 요소로 갖는 배열
+// arr[i]는 'name', 'gender' 등의 속성을 갖는 객체
+// 'grades' 속성은 number 타입을 요소로 갖는 배열
+// 'grades' 속성이 빈 배열인 경우는 없다고 가정
+
+// 출력 : 반복문(for, while) 사용은 금지
+// 배열을 리턴, 배열로 되어 있는 학생들의 성적을 number 타입의 평균값으로 변형
+
+// 주의 : 'female'는 여학생, 'male'는 남학생
+
+/*32*/
+function sumOfArraysInArray(arr) {
+  const joinedArr = arr.reduce(function (acc, cur) {
+    return acc.concat(cur);
+  });
+
+  const onlyNumbers = joinedArr.filter(function (el) {
+    return typeof el === "number";
+  });
+
+  return onlyNumbers.reduce(function (acc, cur) {
+    return acc + cur;
+  }, 0);
+}
+
+// 문제 : 2차원 배열(배열을 요소로 갖는 배열)을 입력받아 모든 수(number)의 합을 리턴해야 합니다.
+
+// 인자 1 : arr : 배열을 요소로 갖는 배열, arr[i]는 임의의 타입을 요소로 갖는 배열
+
+// 출력 : number 타입을 리턴
+
+// 주의 : 합을 구할 때 number 타입만 고려
